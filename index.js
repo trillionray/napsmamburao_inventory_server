@@ -6,6 +6,7 @@ require('dotenv').config();
 
 const userRoutes = require("./routes/user");
 const itemRoutes = require("./routes/item");
+const timeLogRoutes = require("./routes/timeLog");
 
 const app = express();
 
@@ -23,7 +24,7 @@ mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atl
 
 app.use("/users", userRoutes);
 app.use("/items", itemRoutes);
-
+app.use("/timelogs", timeLogRoutes);
 
 app.listen(process.env.PORT || 4000, () => {
     console.log(`API is now online on port ${ process.env.PORT || 4000 }`)

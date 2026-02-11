@@ -57,7 +57,8 @@ exports.getUserDetails = (req, res) => {
   res.json({
     _id: req.user.id,
     email: req.user.email,
-    role: req.user.role
+    role: req.user.role,
+    name: req.user.name
   });
 };
 
