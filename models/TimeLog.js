@@ -17,6 +17,16 @@ const timelogSchema = new mongoose.Schema(
       enum: ["none", "filed", "approved", "disapproved"],
       default: "none"
     },
+    OT: {
+      type: String,
+      enum: ["none", "filed", "approved", "disapproved"],
+      default: "none"
+    },
+    holiday: {
+      type: String,
+      enum: ["none", "filed", "approved", "disapproved"],
+      default: "none"
+    },
   },
   { timestamps: true }
 );

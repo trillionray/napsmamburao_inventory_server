@@ -42,6 +42,30 @@ router.patch(
   timelogController.handleTimeCorrection
 );
 
+router.patch(
+  "/:timelogId/file-ot",
+  verify,
+  timelogController.fileOT
+);
+
+router.patch(
+  "/:timelogId/file-holiday",
+  verify,
+  timelogController.fileHoliday
+);
+
+router.patch(
+  "/:timelogId/handle-ot",
+  verify,
+  timelogController.handleOT
+);
+
+router.patch(
+  "/:timelogId/handle-holiday",
+  verify,
+  timelogController.handleHoliday
+);
+
 
 // [SECTION] Export the router so it can be used in app.js
 module.exports = router;

@@ -371,3 +371,229 @@ module.exports.handleTimeCorrection = async (req, res) => {
     });
   }
 };
+
+// ================= FILE OT =================
+module.exports.fileOT = async (req, res) => {
+  try {
+    const { timelogId } = req.params;
+
+    const timelog = await TimeLog.findById(timelogId);
+
+    if (!timelog) {
+      return res.status(404).json({
+        message: "Time log not found",
+      });
+    }
+
+    // prevent editing paid logs
+    if (timelog.isPaid) {
+      return res.status(400).json({
+        message: "Cannot file OT for paid log",
+      });
+    }
+
+    // prevent duplicate filing
+    if (timelog.OT === "filed") {
+      return res.status(400).json({
+        message: "OT already filed",
+      });
+    }
+
+    // prevent refiling approved OT
+    if (timelog.OT === "approved") {
+      return res.status(400).json({
+        message: "OT already approved",
+      });
+    }
+
+    timelog.OT = "filed";
+
+    await timelog.save();
+
+    res.status(200).json({
+      message: "OT filed successfully",
+      timelog,
+    });
+  } catch (error) {
+    console.error("FILE OT ERROR:", error);
+
+    res.status(500).json({
+      message: "Failed to file OT",
+      error: error.message,
+    });
+  }
+};
+
+
+// ================= FILE HOLIDAY =================
+module.exports.fileHoliday = async (req, res) => {
+  try {
+    const { timelogId } = req.params;
+
+    const timelog = await TimeLog.findById(timelogId);
+
+    if (!timelog) {
+      return res.status(404).json({
+        message: "Time log not found",
+      });
+    }
+
+    // prevent editing paid logs
+    if (timelog.isPaid) {
+      return res.status(400).json({
+        message: "Cannot file holiday for paid log",
+      });
+    }
+
+    // prevent duplicate filing
+    if (timelog.holiday === "filed") {
+      return res.status(400).json({
+        message: "Holiday already filed",
+      });
+    }
+
+    // prevent refiling approved holiday
+    if (timelog.holiday === "approved") {
+      return res.status(400).json({
+        message: "Holiday already approved",
+      });
+    }
+
+    timelog.holiday = "filed";
+
+    await timelog.save();
+
+    res.status(200).json({
+      message: "Holiday filed successfully",
+      timelog,
+    });
+  } catch (error) {
+    console.error(
+      "FILE HOLIDAY ERROR:",
+      error
+    );
+
+    res.status(500).json({
+      message: "Failed to file holiday",
+      error: error.message,
+    });
+  }
+};
+
+
+// ================= HANDLE OT =================
+module.exports.handleOT = async (req, res) => {
+  try {
+    const { timelogId } = req.params;
+    const { status } = req.body;
+
+    if (
+      !["approved", "disapproved"].includes(
+        status
+      )
+    ) {
+      return res.status(400).json({
+        message:
+          "Invalid status. Must be 'approved' or 'disapproved'",
+      });
+    }
+
+    const timelog =
+      await TimeLog.findById(
+        timelogId
+      );
+
+    if (!timelog) {
+      return res.status(404).json({
+        message:
+          "Time log not found",
+      });
+    }
+
+    timelog.OT = status;
+
+    await timelog.save();
+
+    res.status(200).json({
+      message: `OT ${status}`,
+      timelog,
+    });
+
+  } catch (error) {
+    console.error(
+      "HANDLE OT ERROR:",
+      error
+    );
+
+    res.status(500).json({
+      message:
+        "Failed to process OT",
+      error:
+        error.message,
+    });
+  }
+};
+
+
+// ================= HANDLE HOLIDAY =================
+module.exports.handleHoliday =
+  async (req, res) => {
+    try {
+      const { timelogId } =
+        req.params;
+
+      const { status } =
+        req.body;
+
+      if (
+        ![
+          "approved",
+          "disapproved",
+        ].includes(status)
+      ) {
+        return res.status(
+          400
+        ).json({
+          message:
+            "Invalid status. Must be 'approved' or 'disapproved'",
+        });
+      }
+
+      const timelog =
+        await TimeLog.findById(
+          timelogId
+        );
+
+      if (!timelog) {
+        return res
+          .status(404)
+          .json({
+            message:
+              "Time log not found",
+          });
+      }
+
+      timelog.holiday =
+        status;
+
+      await timelog.save();
+
+      res.status(200).json({
+        message: `Holiday ${status}`,
+        timelog,
+      });
+
+    } catch (error) {
+      console.error(
+        "HANDLE HOLIDAY ERROR:",
+        error
+      );
+
+      res.status(500).json({
+        message:
+          "Failed to process holiday",
+        error:
+          error.message,
+      });
+    }
+  };
