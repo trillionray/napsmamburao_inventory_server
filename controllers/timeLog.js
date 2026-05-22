@@ -156,11 +156,11 @@ module.exports.updateTasks = async (req, res) => {
     }
 
     // optional: prevent editing if already clocked out
-    if (timelog.timeOut) {
-      return res.status(400).json({
-        message: "Cannot edit tasks after clock out"
-      });
-    }
+    // if (timelog.timeOut) {
+    //   return res.status(400).json({
+    //     message: "Cannot edit tasks after clock out"
+    //   });
+    // }
 
     timelog.tasks = tasks;
     await timelog.save();
@@ -340,11 +340,11 @@ module.exports.handleTimeCorrection = async (req, res) => {
     }
 
     // ❌ Must have a filed request first
-    if (timelog.correctionStatus !== "filed") {
-      return res.status(400).json({
-        message: "No pending correction to process"
-      });
-    }
+    // if (timelog.correctionStatus !== "filed") {
+    //   return res.status(400).json({
+    //     message: "No pending correction to process"
+    //   });
+    // }
 
     // ❌ Prevent approving paid logs (optional but recommended)
     if (timelog.isPaid) {
