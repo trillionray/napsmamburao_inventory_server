@@ -18,6 +18,14 @@ app.use(express.json());
 // }
 app.use(cors());
 
+// Wake endpoint
+app.get("/wake", (req, res) => {
+    return res.status(200).json({
+        success: true,
+        message: "Server is awake"
+    });
+});
+
 mongoose.connect(process.env.MONGODB_STRING)
 
 mongoose.connection.once('open', () => console.log('Now connected to MongoDB Atlas.'));
