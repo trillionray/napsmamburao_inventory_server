@@ -50,6 +50,18 @@ module.exports.verifyAdmin = (req, res, next) => {
 };
 
 
+module.exports.verifyItemOfficer = (req, res, next) => {
+    if (req.user.role === "item_officer" || req.user.role === "admin" ) {
+        next();
+    } else {
+        return res.status(403).send({
+            auth: "Failed",
+            message: "Action Forbidden: User not a principal"
+        });
+    }
+};
+
+
 
 // [ERROR HANDLER]
 module.exports.errorHandler = (err, req, res, next) => {
